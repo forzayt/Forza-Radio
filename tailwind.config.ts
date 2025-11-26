@@ -57,6 +57,13 @@ export default {
           border: "hsl(var(--sidebar-border))",
           ring: "hsl(var(--sidebar-ring))",
         },
+        "gradient-start": "hsl(var(--gradient-start))",
+        "gradient-mid": "hsl(var(--gradient-mid))",
+        "gradient-end": "hsl(var(--gradient-end))",
+        "glass-bg": "hsl(var(--glass-bg))",
+        "glass-border": "hsl(var(--glass-border))",
+        "visualizer-primary": "hsl(var(--visualizer-primary))",
+        "visualizer-secondary": "hsl(var(--visualizer-secondary))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -84,6 +91,9 @@ export default {
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "gradient-shift": "gradient-shift 8s ease infinite",
+        "pulse-glow": "pulse-glow 2s ease-in-out infinite",
+        "wave": "wave 0.6s ease-in-out infinite",
       },
     },
   },
