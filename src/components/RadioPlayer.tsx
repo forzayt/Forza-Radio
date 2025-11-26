@@ -3,6 +3,7 @@ import { AudioVisualizer } from "./AudioVisualizer";
 import { StationCard } from "./StationCard";
 import { SearchBar } from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
+import { PlayPauseButton } from "./PlayPauseButton";
 import stations from "@/data/stations.json";
 
 interface Station {
@@ -19,6 +20,7 @@ export const RadioPlayer = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioLevel, setAudioLevel] = useState(0);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
@@ -87,6 +89,18 @@ export const RadioPlayer = () => {
 
   const handleStationChange = (station: Station) => {
     setCurrentStation(station);
+    setShowSearchResults(false);
+    setSearchQuery("");
+  };
+
+  const togglePlayPause = () => {
+    if (!audioRef.current) return;
+    
+    if (isPlaying) {
+      audioRef.current.pause();
+    } else {
+      audioRef.current.play().catch(console.error);
+    }
   };
 
   return (
@@ -100,12 +114,42 @@ export const RadioPlayer = () => {
       />
 
       <div className="relative z-10 container mx-auto px-4 py-8 min-h-screen flex flex-col">
-        {/* Header */}
-        <header className="flex items-center justify-between mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-            Forza Radio
-          </h1>
-          <ThemeToggle />
+        {/* Header with Search */}
+        <header className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
+              Forza Radio
+            </h1>
+            <ThemeToggle />
+          </div>
+          <div className="relative">
+            <SearchBar 
+              value={searchQuery} 
+              onChange={(value) => {
+                setSearchQuery(value);
+                setShowSearchResults(value.length > 0);
+              }} 
+            />
+            {/* Search Results Dropdown */}
+            {showSearchResults && searchQuery && (
+              <div className="absolute top-full left-0 right-0 mt-2 glass rounded-2xl p-4 max-h-96 overflow-y-auto z-50">
+                {filteredStations.length > 0 ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                    {filteredStations.map((station) => (
+                      <StationCard
+                        key={station.id}
+                        station={station}
+                        isActive={station.id === currentStation.id}
+                        onClick={() => handleStationChange(station)}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-white/60 text-center py-8">No stations found</p>
+                )}
+              </div>
+            )}
+          </div>
         </header>
 
         {/* Main Player */}
@@ -137,29 +181,20 @@ export const RadioPlayer = () => {
             <p className="text-sm text-white/60">{currentStation.description}</p>
           </div>
 
-          {/* Audio Visualizer */}
-          <AudioVisualizer
-            analyser={analyserRef.current}
-            isPlaying={isPlaying}
-            audioLevel={audioLevel}
+          {/* Play/Pause Button */}
+          <PlayPauseButton 
+            isPlaying={isPlaying} 
+            onClick={togglePlayPause}
           />
-        </div>
 
-        {/* Search Bar */}
-        <div className="mb-8">
-          <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        </div>
-
-        {/* Station Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {filteredStations.map((station) => (
-            <StationCard
-              key={station.id}
-              station={station}
-              isActive={station.id === currentStation.id}
-              onClick={() => handleStationChange(station)}
+          {/* Audio Visualizer */}
+          <div className="mt-8">
+            <AudioVisualizer
+              analyser={analyserRef.current}
+              isPlaying={isPlaying}
+              audioLevel={audioLevel}
             />
-          ))}
+          </div>
         </div>
       </div>
     </div>
