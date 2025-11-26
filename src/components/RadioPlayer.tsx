@@ -76,8 +76,18 @@ export const RadioPlayer = () => {
         {/* Header with Search */}
         <header className="mb-12">
           <div className="flex items-center justify-between mb-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight">
-              Forza Radio
+            <h1 className="text-4xl md:text-5xl font-bold text-white tracking-tight animate-fade-in">
+              <span className="inline-block animate-pulse-glow">F</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.1s' }}>o</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.2s' }}>r</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.3s' }}>z</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.4s' }}>a</span>
+              <span className="inline-block mx-2">🎵</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.5s' }}>R</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.6s' }}>a</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.7s' }}>d</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.8s' }}>i</span>
+              <span className="inline-block animate-pulse-glow" style={{ animationDelay: '0.9s' }}>o</span>
             </h1>
             <ThemeToggle />
           </div>
@@ -91,18 +101,30 @@ export const RadioPlayer = () => {
             />
             {/* Search Results Dropdown */}
             {showSearchResults && searchQuery && (
-              <div className="absolute top-full left-0 right-0 mt-2 glass rounded-2xl p-4 max-h-96 overflow-y-auto z-50">
+              <div className="absolute top-full left-0 right-0 mt-2 glass rounded-2xl p-2 max-h-96 overflow-y-auto z-50 bg-card/95 backdrop-blur-xl border border-white/20">
                 {filteredStations.length > 0 ? (
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                  <ul className="space-y-1">
                     {filteredStations.map((station) => (
-                      <StationCard
-                        key={station.id}
-                        station={station}
-                        isActive={station.id === currentStation.id}
-                        onClick={() => handleStationChange(station)}
-                      />
+                      <li key={station.id}>
+                        <button
+                          onClick={() => handleStationChange(station)}
+                          className={`w-full text-left px-4 py-3 rounded-xl transition-all hover:bg-white/10 ${
+                            station.id === currentStation.id
+                              ? "bg-white/20 text-white font-semibold"
+                              : "text-white/80 hover:text-white"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span>{station.name}</span>
+                            {station.id === currentStation.id && (
+                              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                            )}
+                          </div>
+                          <span className="text-xs text-white/50">{station.genre}</span>
+                        </button>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 ) : (
                   <p className="text-white/60 text-center py-8">No stations found</p>
                 )}
