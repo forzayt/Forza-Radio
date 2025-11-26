@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { AudioVisualizer } from "./AudioVisualizer";
 import { StationCard } from "./StationCard";
 import { SearchBar } from "./SearchBar";
 import { ThemeToggle } from "./ThemeToggle";
@@ -19,12 +18,8 @@ export const RadioPlayer = () => {
   const [currentStation, setCurrentStation] = useState<Station>(stations[0]);
   const [searchQuery, setSearchQuery] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
-  const [audioLevel, setAudioLevel] = useState(0);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioContextRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const animationRef = useRef<number>();
 
   const filteredStations = stations.filter(
     (station) =>
@@ -34,23 +29,12 @@ export const RadioPlayer = () => {
 
   useEffect(() => {
     const audio = new Audio(currentStation.url);
+    audio.volume = 1.0; // Set volume to maximum
     audioRef.current = audio;
 
     audio.addEventListener("playing", () => setIsPlaying(true));
     audio.addEventListener("pause", () => setIsPlaying(false));
     audio.addEventListener("error", () => setIsPlaying(false));
-
-    // Setup Web Audio API for visualization
-    const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-    audioContextRef.current = audioContext;
-    
-    const analyser = audioContext.createAnalyser();
-    analyser.fftSize = 256;
-    analyserRef.current = analyser;
-
-    const source = audioContext.createMediaElementSource(audio);
-    source.connect(analyser);
-    analyser.connect(audioContext.destination);
 
     // Auto-play
     audio.play().catch(console.error);
@@ -58,34 +42,9 @@ export const RadioPlayer = () => {
     return () => {
       audio.pause();
       audio.src = "";
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-      audioContext.close();
     };
   }, [currentStation]);
 
-  useEffect(() => {
-    if (!analyserRef.current) return;
-
-    const analyser = analyserRef.current;
-    const dataArray = new Uint8Array(analyser.frequencyBinCount);
-
-    const updateAudioLevel = () => {
-      analyser.getByteFrequencyData(dataArray);
-      const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
-      setAudioLevel(average / 255);
-      animationRef.current = requestAnimationFrame(updateAudioLevel);
-    };
-
-    updateAudioLevel();
-
-    return () => {
-      if (animationRef.current) {
-        cancelAnimationFrame(animationRef.current);
-      }
-    };
-  }, [currentStation]);
 
   const handleStationChange = (station: Station) => {
     setCurrentStation(station);
@@ -109,7 +68,7 @@ export const RadioPlayer = () => {
       <div
         className="absolute inset-0 opacity-30 blur-3xl transition-all duration-1000"
         style={{
-          background: `radial-gradient(circle at 50% 50%, hsl(var(--visualizer-primary) / ${audioLevel}), transparent 70%)`,
+          background: `radial-gradient(circle at 50% 50%, hsl(var(--visualizer-primary) / 0.5), transparent 70%)`,
         }}
       />
 
@@ -154,21 +113,18 @@ export const RadioPlayer = () => {
 
         {/* Main Player */}
         <div className="flex-1 flex flex-col items-center justify-center max-w-2xl mx-auto w-full mb-12">
-          {/* Station Image with Visualizer */}
+          {/* Station Image */}
           <div className="relative mb-8">
             <div
               className="absolute inset-0 rounded-full blur-2xl animate-pulse-glow"
               style={{
-                background: `radial-gradient(circle, hsl(var(--visualizer-primary) / ${audioLevel}), hsl(var(--visualizer-secondary) / ${audioLevel * 0.5}))`,
+                background: `radial-gradient(circle, hsl(var(--visualizer-primary) / 0.6), hsl(var(--visualizer-secondary) / 0.3))`,
               }}
             />
             <img
               src={currentStation.image}
               alt={currentStation.name}
-              className="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-white/20 transition-transform duration-500"
-              style={{
-                transform: `scale(${1 + audioLevel * 0.1})`,
-              }}
+              className="relative w-64 h-64 md:w-80 md:h-80 rounded-full object-cover shadow-2xl ring-4 ring-white/20"
             />
           </div>
 
@@ -186,15 +142,6 @@ export const RadioPlayer = () => {
             isPlaying={isPlaying} 
             onClick={togglePlayPause}
           />
-
-          {/* Audio Visualizer */}
-          <div className="mt-8">
-            <AudioVisualizer
-              analyser={analyserRef.current}
-              isPlaying={isPlaying}
-              audioLevel={audioLevel}
-            />
-          </div>
         </div>
       </div>
     </div>
