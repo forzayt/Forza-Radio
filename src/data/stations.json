@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1",
+    "name": "Benziger Radio",
+    "url": "https://icecast.octosignals.com/benziger",
+    "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop",
+    "genre": "Contemporary",
+    "description": "Live stream from Benziger"
+  },
+  {
+    "id": "2",
+    "name": "Chill Vibes FM",
+    "url": "https://icecast.octosignals.com/benziger",
+    "image": "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop",
+    "genre": "Chill",
+    "description": "Relaxing beats and ambient sounds"
+  },
+  {
+    "id": "3",
+    "name": "Jazz Lounge",
+    "url": "https://icecast.octosignals.com/benziger",
+    "image": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=400&h=400&fit=crop",
+    "genre": "Jazz",
+    "description": "Smooth jazz classics"
+  },
+  {
+    "id": "4",
+    "name": "Electronic Pulse",
+    "url": "https://icecast.octosignals.com/benziger",
+    "image": "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=400&h=400&fit=crop",
+    "genre": "Electronic",
+    "description": "Electronic beats and synth waves"
+  },
+  {
+    "id": "5",
+    "name": "Rock Revolution",
+    "url": "https://icecast.octosignals.com/benziger",
+    "image": "https://images.unsplash.com/photo-1498038432885-c6f3f1b912ee?w=400&h=400&fit=crop",
+    "genre": "Rock",
+    "description": "Classic and modern rock hits"
+  },
+  {
+    "id": "6",
+    "name": "Indie Discovery",
+    "url": "https://icecast.octosignals.com/benziger",
+    "image": "https://images.unsplash.com/photo-1487180144351-b8472da7d491?w=400&h=400&fit=crop",
+    "genre": "Indie",
+    "description": "Discover new indie artists"
+  }
+]
