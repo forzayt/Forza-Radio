@@ -1,11 +1,11 @@
 [
   {
     "id": "1",
-    "name": "Benziger Radio",
+    "name": "Community Radio Benziger 107.8",
     "url": "https://icecast.octosignals.com/benziger",
-    "image": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop",
-    "genre": "Contemporary",
-    "description": "Live stream from Benziger"
+    "image": "https://play-lh.googleusercontent.com/Fyx9Cg7Dmehd66qx7wMGSDCBTbrtv5GpYhtxW9XexWglCDZiCwxM-oIbS2JGPGNfjt4",
+    "genre": "",
+    "description": ""
   },
   {
     "id": "2",
